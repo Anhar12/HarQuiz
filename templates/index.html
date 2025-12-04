@@ -13,26 +13,29 @@
             </h1>
 
             <p class="text-lg body-font text-justify text-teal-800 max-w-xl">
-                Selamat datang di <span class="font-semibold text-[#0a3234]">HarQuiz</span>.  
-                Buat, kerjakan, dan kelola quiz kamu sendiri dengan tampilan bersih dan responsif.
-                Cocok untuk mahasiswa, pelajar, atau siapa pun yang butuh latihan cepat dan rapi.
+                Selamat datang di <span class="font-semibold text-[#0a3234]">HarQuiz</span>.
+                Buat dan kerjakan quiz dengan tampilan yang rapi, cepat, dan mudah dipakai.
+                Cocok untuk siapa pun yang butuh latihan singkat tanpa ribet.
+                <button onclick="openLoginModal()" class="text-teal-600 font-semibold underline hover:text-teal-700">
+                    login untuk mulai mengerjakan
+                </button>
             </p>
 
             <p class="text-md body-font text-teal-700 text-justify max-w-xl">
                 Sistemnya ringan dan antarmukanya sederhana, jadi kamu bisa fokus belajar tanpa ribet.
-                Dan oh ya, kami juga punya fitur  
+                Dan oh ya, kami juga punya fitur
                 <a href="#weather-section" class="text-teal-600 font-semibold underline hover:text-teal-700">
                     Prediksi Cuaca
-                </a>  
-                biar kamu tidak berangkat kuliah sambil kehujanan.
+                </a>
+                biar kamu tidak bepergian sambil kehujanan.
             </p>
         </div>
 
         <!-- IMAGE -->
         <div class="z-10 flex justify-center">
             <div class="w-full overflow-hidden">
-                <img src="/static/img/hero.jpeg" 
-                     alt="Ilustrasi Quiz" 
+                <img src="/static/img/hero.jpeg"
+                     alt="Ilustrasi Quiz"
                      class="w-full object-cover">
             </div>
         </div>
@@ -48,22 +51,22 @@
         </h2>
 
         <form id="weather-form" method="POST" class="flex flex-col md:flex-row gap-4 mb-6 justify-center" autocomplete="off">
-            <input 
-                type="text" 
-                id="city" 
-                name="city" 
+            <input
+                type="text"
+                id="city"
+                name="city"
                 placeholder="Masukkan nama kota (contoh: Jakarta)"
                 class="border border-teal-300 bg-white text-teal-900 p-3
                        focus:ring-1 focus:ring-teal-400 focus:outline-none w-full md:w-80 shadow-sm"
             >
 
-            <button 
+            <button
                 type="submit"
                 class="
                     px-5 py-2.5 hidden md:flex
                     font-semibold tracking-wide
-                    bg-gradient-to-br from-teal-500 to-teal-600 
-                    text-white 
+                    bg-gradient-to-br from-teal-500 to-teal-600
+                    text-white
                     shadow-md shadow-black/25
                     transition-all duration-300 ease-out
                     hover:from-teal-400 hover:to-teal-500
@@ -97,8 +100,8 @@
                     class="
                         px-5 py-2.5 w-1/2
                         font-semibold tracking-wide
-                        bg-gradient-to-br from-teal-500 to-teal-600 
-                        text-white 
+                        bg-gradient-to-br from-teal-500 to-teal-600
+                        text-white
                         shadow-md shadow-black/25
                         transition-all duration-300 ease-out
                         hover:from-teal-400 hover:to-teal-500
