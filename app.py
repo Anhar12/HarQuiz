@@ -145,6 +145,7 @@ def login():
         return jsonify({'error': 'Username atau password salah!'}), 401
 
     login_user(user)
+    session['total_score'] = user.total_score or 0
 
     return jsonify({
         'message': 'Login berhasil!',
@@ -207,6 +208,13 @@ def check_answer():
         is_correct=is_correct
     )
     db.session.add(attempt)
+
+    if is_correct:
+        user = current_user
+        user.total_score = (user.total_score or 0) + 10
+        db.session.add(user)
+        session['total_score'] = current_user.total_score
+
     db.session.commit()
 
     return jsonify({
@@ -214,6 +222,7 @@ def check_answer():
         "correct": is_correct,
         "message": "Benar!" if is_correct else "Salah."
     })
+
 
 @app.route("/leaderboard")
 def leaderboard():
