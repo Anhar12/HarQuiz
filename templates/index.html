@@ -2,9 +2,8 @@
 
 {% block content %}
 
-<section class="h-[89vh] bg-white relative overflow-hidden body-font flex items-center">
-
-    <div class="relative mx-auto px-6 md:px-12 py-12 grid md:grid-cols-2 gap-10 items-center">
+<section class="md:h-[89vh] bg-white relative overflow-hidden body-font flex items-center">
+    <div class="relative mx-auto px-6 md:px-12 pt-6 pb-12 flex md:gap-10 items-center flex-col-reverse md:flex-row">
 
         <!-- TEXT -->
         <div class="text-teal-900 z-10 space-y-6">
@@ -41,39 +40,27 @@
     </div>
 </section>
 
-<section id="weather-section" class="bg-teal-50 py-14 px-6 md:px-12">
+<section id="weather-section" class="bg-teal-50 py-12 px-6 md:px-12">
     <div class="max-w-5xl mx-auto">
 
-        <h2 class="text-3xl font-bold head-font mb-3 text-[#0a3234] text-center uppercase">
+        <h2 class="text-3xl font-bold head-font mb-6 text-[#0a3234] text-center uppercase">
             Prediksi Cuaca
         </h2>
 
-        {% if city %}
-        <p class="text-center text-teal-700 mb-6 text-lg">
-            Hasil untuk kota <span class="font-bold text-[#0a3234]">{{ city }}</span>
-        </p>
-        {% endif %}
-
-        <!-- FORM -->
-        <form method="POST" action=""
-              class="flex flex-col md:flex-row gap-4 mb-12 justify-center"
-              autocomplete="off">
-            
+        <form id="weather-form" method="POST" class="flex flex-col md:flex-row gap-4 mb-6 justify-center" autocomplete="off">
             <input 
                 type="text" 
                 id="city" 
                 name="city" 
                 placeholder="Masukkan nama kota (contoh: Jakarta)"
-                value="{{ city if city else '' }}"
                 class="border border-teal-300 bg-white text-teal-900 p-3
                        focus:ring-1 focus:ring-teal-400 focus:outline-none w-full md:w-80 shadow-sm"
             >
 
-            <!-- SUBMIT BUTTON -->
             <button 
                 type="submit"
                 class="
-                    px-5 py-2.5 
+                    px-5 py-2.5 hidden md:flex
                     font-semibold tracking-wide
                     bg-gradient-to-br from-teal-500 to-teal-600 
                     text-white 
@@ -81,86 +68,145 @@
                     transition-all duration-300 ease-out
                     hover:from-teal-400 hover:to-teal-500
                     hover:-translate-y-0.5
-                    active:scale-95
+                    active:scale-95 items-center gap-2 justify-center
                 "
             >
                 Cek Cuaca
+                <i class="fas fa-paper-plane"></i>
             </button>
 
-            <!-- RESET BUTTON -->
-            <a 
-                href="/"
+            <button type="button"
                 class="
-                    px-5 py-2.5 
+                    px-5 py-2.5 hidden md:flex btn-reset
                     font-semibold tracking-wide
                     bg-gradient-to-br from-gray-400 to-gray-500
-                    text-white 
+                    text-white justify-center
                     shadow-md shadow-black/25
                     transition-all duration-300 ease-out
                     hover:from-gray-400 hover:to-gray-400
                     hover:-translate-y-0.5
-                    active:scale-95
+                    active:scale-95 items-center gap-2
                 "
             >
+                Reset
                 <i class="fa-solid fa-rotate"></i>
-            </a>
+            </button>
+
+            <div class="md:hidden flex gap-4">
+                <button type="submit"
+                    class="
+                        px-5 py-2.5 w-1/2
+                        font-semibold tracking-wide
+                        bg-gradient-to-br from-teal-500 to-teal-600 
+                        text-white 
+                        shadow-md shadow-black/25
+                        transition-all duration-300 ease-out
+                        hover:from-teal-400 hover:to-teal-500
+                        hover:-translate-y-0.5
+                        active:scale-95 flex items-center gap-2 justify-center
+                    "
+                >
+                    Cek Cuaca
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+
+                <button type="button"
+                    class="
+                        px-5 py-2.5 w-1/2 btn-reset
+                        font-semibold tracking-wide
+                        bg-gradient-to-br from-gray-400 to-gray-500
+                        text-white flex justify-center
+                        shadow-md shadow-black/25
+                        transition-all duration-300 ease-out
+                        hover:from-gray-400 hover:to-gray-400
+                        hover:-translate-y-0.5
+                        active:scale-95 items-center gap-2
+                    "
+                >
+                    Reset
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+            </div>
         </form>
 
-        <!-- FORECAST -->
-        {% if forecast %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <p class="text-center text-teal-700 text-lg hidden mb-6" id="city-result">
+            Hasil untuk kota <span id="city-text" class="font-bold text-[#0a3234]"></span>
+        </p>
 
-            {% for day in forecast %}
-            <div class="bg-white border border-teal-200 p-5 rounded-xl shadow-md hover:shadow-lg transition
-                        flex flex-col gap-3">
-
-                <!-- HEADER -->
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-teal-600">{{ day.date }}</p>
-                        <h4 class="text-lg font-semibold text-[#0a3234] head-font">{{ day.day_name }}</h4>
-                    </div>
-
-                    <div class="text-4xl">
-                        {% if 'Hujan' in day.condition %}
-                            <i class="fa-solid fa-cloud-showers-heavy text-teal-600"></i>
-                        {% elif 'Cerah' in day.condition %}
-                            <i class="fa-solid fa-sun text-yellow-500"></i>
-                        {% elif 'Berawan' in day.condition %}
-                            <i class="fa-solid fa-cloud text-gray-500"></i>
-                        {% else %}
-                            <i class="fa-solid fa-cloud-sun text-teal-500"></i>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 text-sm mt-1">
-                    <div>
-                        <p class="text-teal-600">Siang</p>
-                        <p class="text-[#0a3234] text-lg font-semibold">{{ day.temp_day }}°C</p>
-                    </div>
-                    <div>
-                        <p class="text-teal-600">Malam</p>
-                        <p class="text-[#0a3234] text-lg font-semibold">{{ day.temp_night }}°C</p>
-                    </div>
-                </div>
-
-                <p class="text-sm text-teal-700 mt-2">
-                    {{ day.condition }}
-                </p>
-            </div>
-            {% endfor %}
-
-        </div>
-        {% endif %}
-
+        <div id="forecastContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
     </div>
 </section>
 
 <script>
-    {% if forecast %}
-        window.location.hash = "weather-section";
-    {% endif %}
+$(document).ready(function() {
+    $('.btn-reset').on('click', function(){
+        $("#forecastContainer").empty();
+        $("#city-result").addClass('hidden');
+        $("#city-text").text('');
+        $("#city").val('');
+    });
+
+    $("#weather-form").submit(function(e){
+        e.preventDefault();
+        var city = $("#city").val().trim();
+        if(!city) return;
+
+        $.ajax({
+            url: "/weather",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ city: city }),
+            beforeSend: function() { ShowLoading(); },
+            success: function(res){
+                $("#forecastContainer").empty();
+                $("#city-result").removeClass('hidden');
+                $("#city-text").text(res.city);
+
+                res.forecast.forEach(day => {
+                    let icon = '';
+                    if(day.condition.includes('Hujan')) icon = '<i class="fa-solid fa-cloud-showers-heavy text-teal-600"></i>';
+                    else if(day.condition.includes('Cerah')) icon = '<i class="fa-solid fa-sun text-yellow-500"></i>';
+                    else if(day.condition.includes('Berawan')) icon = '<i class="fa-solid fa-cloud text-gray-500"></i>';
+                    else icon = '<i class="fa-solid fa-cloud-sun text-teal-500"></i>';
+
+                    let card = `<div class="bg-white border border-teal-200 p-5 rounded-xl shadow-md hover:shadow-lg transition flex flex-col gap-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-teal-600">${day.date}</p>
+                                <h4 class="text-lg font-semibold text-[#0a3234] head-font">${day.day_name}</h4>
+                            </div>
+                            <div class="text-4xl">${icon}</div>
+                        </div>
+                        <div class="grid grid-cols-2 text-sm mt-1">
+                            <div>
+                                <p class="text-teal-600">Siang</p>
+                                <p class="text-[#0a3234] text-lg font-semibold">${day.temp_day}°C</p>
+                            </div>
+                            <div>
+                                <p class="text-teal-600">Malam</p>
+                                <p class="text-[#0a3234] text-lg font-semibold">${day.temp_night}°C</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-teal-700 mt-2">${day.condition}</p>
+                    </div>`;
+                    $("#forecastContainer").append(card);
+                });
+            },
+            error: function(xhr){
+                $("#loadingOverlay").addClass("hidden");
+                let msg = "Terjadi kesalahan!";
+                if(xhr.responseJSON && xhr.responseJSON.error) msg = xhr.responseJSON.error;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: msg,
+                    confirmButtonColor: '#F87171'
+                });
+            },
+            complete: function() { HideLoading(); }
+        });
+    });
+});
 </script>
 
 {% endblock %}

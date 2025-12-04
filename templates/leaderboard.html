@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="min-h-[89vh] bg-gradient-to-br from-teal-50 to-white flex justify-center items-start py-6 px-4 relative overflow-hidden">
+
+    <div class="absolute -top-16 -left-16 w-40 h-40 bg-teal-200 opacity-40 blur-3xl"></div>
+    <div class="absolute -bottom-20 -right-10 w-48 h-48 bg-teal-300 opacity-30 blur-3xl"></div>
+
+    <div class="relative w-full md:w-3/4 bg-white shadow-xl overflow-hidden border border-teal-100">
+        
+        <div class="bg-gradient-to-r from-teal-600 to-teal-500 text-white px-6 py-4 flex md:flex-row flex-col justify-between items-center">
+            <h2 class="text-2xl font-bold tracking-wide">Leaderboard</h2>
+            <p class="text-md text-teal-50">Peringkat pemain berdasarkan skor</p>
+        </div>
+
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-teal-100 text-teal-700 text-sm uppercase tracking-wider">
+                    <th class="p-3">Rank</th>
+                    <th class="p-3">Username</th>
+                    <th class="p-3">Score</th>
+                    <th class="p-3">Attempts</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+
+                {% for item in leaderboard %}
+                <tr class="
+                    border-b 
+                    transition-all duration-200
+                    {% if loop.index == 1 %} bg-yellow-100/40 hover:bg-yellow-100 {% endif %}
+                    {% if loop.index == 2 %} bg-gray-100/40 hover:bg-gray-100 {% endif %}
+                    {% if loop.index == 3 %} bg-orange-100/40 hover:bg-orange-100 {% endif %}
+                    {% if loop.index > 3 %} hover:bg-teal-50 {% endif %}
+                ">
+                    <td class="p-3 font-semibold">
+                        {% if loop.index == 1 %}
+                            🥇
+                        {% elif loop.index == 2 %}
+                            🥈
+                        {% elif loop.index == 3 %}
+                            🥉
+                        {% else %}
+                            {{ loop.index }}
+                        {% endif %}
+                    </td>
+
+                    <td class="p-3 font-medium">{{ item.username }}</td>
+                    <td class="p-3 font-bold text-teal-700">{{ item.score }}</td>
+                    <td class="p-3">{{ item.attempts }}</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        <div class="flex justify-center my-6 gap-3">
+
+    {% if current_page > 1 %}
+    <a href="{{ url_for('leaderboard', page=current_page - 1) }}"
+       class="px-4 py-2 bg-teal-600 text-white border border-teal-700 hover:bg-teal-700">
+        Prev
+    </a>
+    {% endif %}
+
+    <span class="px-4 py-2 bg-teal-100 text-teal-700 border border-teal-700">
+        Page {{ current_page }} of {{ total_pages }}
+    </span>
+
+    {% if current_page < total_pages %}
+    <a href="{{ url_for('leaderboard', page=current_page + 1) }}"
+       class="px-4 py-2 bg-teal-600 text-white border border-teal-700 hover:bg-teal-700">
+        Next
+    </a>
+    {% endif %}
+
+</div>
+
+    </div>
+</section>
+
+<script>
+$(document).ready(function () {
+
+});
+</script>
+
+{% endblock %}

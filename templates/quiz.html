@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="md:h-[89vh] py-6 md:py-0 bg-gradient-to-br from-teal-50 to-white flex items-center justify-center px-4 relative overflow-hidden">
+    <div class="absolute -top-16 -left-16 w-40 h-40 bg-teal-200 opacity-40 blur-3xl"></div>
+    <div class="absolute -bottom-20 -right-10 w-48 h-48 bg-teal-300 opacity-30 blur-3xl"></div>
+
+    <div class="relative md:w-1/2">
+        <p class="text-lg font-extrabold text-teal-700 tracking-tight mb-2">
+            {{ quiz.topic }}
+        </p>
+
+        <p class="text-xl text-gray-700 leading-relaxed mb-6">
+            {{ quiz.question }}
+        </p>
+
+        <form id="quizForm" class="space-y-4 select-none">
+            <input type="hidden" name="question_id" value="{{ quiz.id }}" class="hidden">
+
+            {% for opt in quiz.options %}
+            <label class="block group">
+                <input type="radio" name="answer" value="{{ opt.id }}" class="hidden peer">
+
+                <div
+                    class="option-item w-full p-4 border border-gray-300
+                            bg-white shadow-sm cursor-pointer
+                            transition-all duration-200
+                            group-hover:border-teal-400
+                            peer-checked:border-teal-600
+                            peer-checked:bg-teal-50
+                            peer-checked:shadow-md
+                            flex items-center"
+                    >
+                    <div
+                        class="bullet
+                                w-5 h-5 mr-3 rounded-full border-[3px] border-gray-400
+                                transition-all">
+                    </div>
+
+                    <span class="text-gray-800 text-base font-medium">
+                        {{ opt.text }}
+                    </span>
+                </div>
+            </label>
+            {% endfor %}
+
+            <button type="submit"
+                class="mt-6 w-full py-3 text-lg font-semibold
+                        bg-gradient-to-br from-teal-500 to-teal-600 text-white
+                        shadow-lg shadow-teal-900/20
+                        transition-all duration-300
+                        hover:from-teal-400 hover:to-teal-500
+                        hover:-translate-y-0.5 active:scale-[0.97]">
+                Jawab
+                <i class="fas fa-paper-plane ml-2"></i>
+            </button>
+
+        </form>
+    </div>
+</section>
+
+<script>
+$(document).ready(function () {
+    $(".option-item").on("click", function () {
+        const radio = $(this).prev("input[type=radio]");
+        radio.prop("checked", true);
+        radio.trigger("input");      // penting untuk tailwind peer
+        radio.trigger("change");
+    });
+
+    $("input[name='answer']").on("change", function () {
+        $(".option-item")
+            .removeClass("ring-2 ring-teal-500 scale-[1.01]");
+        $(".bullet")
+            .removeClass("border-teal-600 bg-teal-400");
+
+        const selectedOption = $(this).next(".option-item");
+        selectedOption.addClass("ring-2 ring-teal-500 scale-[1.01]");
+
+        const selectedBullet = selectedOption.children('.bullet');
+        selectedBullet.addClass("border-teal-600 bg-teal-400");
+    });
+
+    $("#quizForm").on("submit", function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: "/quiz/check",
+            method: "POST",
+            data: $(this).serialize(),
+            beforeSend: function() {
+                ShowLoading();
+            },
+            success: function (res) {
+                if (res.success) {
+                    if (res.correct) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Benar!',
+                            text: 'Mantap, lanjut ke soal berikutnya.',
+                            confirmButtonColor: '#13b4a2',
+                            allowOutsideClick: false,
+                            timer: 2000,
+                            timerProgressBar: true
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Salah',
+                            text: 'Tetap semangat, semoga soal berikutnya benar!',
+                            confirmButtonColor: '#b21b1b',
+                            allowOutsideClick: false,
+                            timer: 2000,
+                            timerProgressBar: true
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi kesalahan',
+                        text: res.message,
+                        confirmButtonColor: '#b21b1b',
+                    });
+                }
+            },
+            complete: function() {
+                HideLoading();
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}
